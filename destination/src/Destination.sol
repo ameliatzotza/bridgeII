@@ -40,7 +40,7 @@ contract Destination is AccessControl {
 		BridgeToken token = BridgeToken(_wrapped_token);
 		require(token.balanceOf(msg.sender) >= _amount, "Insufficient balance to unwrap");
 		
-		token.burn(msg.sender, _amount);
+		token.burn(_amount);
 		
 		address underlying = wrapped_tokens[_wrapped_token];
 		
@@ -53,7 +53,8 @@ contract Destination is AccessControl {
 
 		require(underlying_tokens[_underlying_token] == address(0), "Token already registered");
 		
-		BridgeToken newToken = new BridgeToken(_underlying_token, name, symbol);
+		BridgeToken newToken = new BridgeToken(_underlying_token, name, symbol, address(this));
+
 		address newTokenAddress = address(newToken);
 		
 		underlying_tokens[_underlying_token] = newTokenAddress;
